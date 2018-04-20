@@ -8,29 +8,33 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
+
 // CREATING VARIABLES FOR SCORE
 var score, roundScore, activePlayer, dice;
 
-// SCORE IN ARRAY
-score = [0, 0];
-roundScore = 0;
-activePlayer = 0;
-
-// Setting initial values to 0 for player 1
-$("#score-0").html(0);
-$("#current-0").html(0);
-
-
-// Setting initial values to 0 for player 2
-$("#score-1").html(0);
-$("#current-1").html(0);
-
+StartGame();
 
 // SETTING THE VALUE FOR THE CURRENT PLAYER
 $("#current-" + activePlayer).html(dice);
 
 // hidding the dice for the beginnig round
 $(".dice").css({display: "none"});
+
+// Start / NewGame 
+function StartGame() {
+    // SCORE IN ARRAY
+    score = [0, 0];
+    roundScore = 0;
+    activePlayer = 0;
+    // Setting initial values to 0 for player 1
+    $("#score-0").html(0);
+    $("#current-0").html(0);
+
+
+    // Setting initial values to 0 for player 2
+    $("#score-1").html(0);
+    $("#current-1").html(0);
+}
 
 // Next player function
 function NextPlayer(){
@@ -40,13 +44,14 @@ function NextPlayer(){
     roundScore = 0;
 
     // changing UI 
-    $("current-0").text("0");
-    $("current-1").text("0");
+    $("#current-0").html(0);
+    $("#current-1").html(0);
 
     // selecting active player        
     $(".player-0-panel").toggleClass("active");
     $(".player-1-panel").toggleClass("active");
 }
+
 
 //seeting up the event handler for rolling the dice
 $(".btn-roll").click(event => {
@@ -79,13 +84,13 @@ $(".btn-roll").click(event => {
 $(".btn-hold").click(event => {
     //1. Add current score to global socor
     score[activePlayer] += roundScore;
-
+    
     // 2. Update the UI
     $("#score-" + activePlayer).html(score[activePlayer]);   
      // calling next player
 
     // 3. Check if the player won the game
-    if(score[activePlayer] >= 10){
+    if(score[activePlayer] >= 20){
         $("#name-" + activePlayer).html("winner!");
         var diceDOM = $(".dice");
         diceDOM.css({display: "none"}); // hidding the dice
@@ -96,4 +101,23 @@ $(".btn-hold").click(event => {
     }
 
 });
+
+
+// New game functionality
+$(".btn-new").click(event => {
+    // reset the scores to 0
+        StartGame();
+    // reset active player to 0
+        $(".player-0-panel").toggleClass("active");
+        $(".player-1-panel").toggleClass("active");
+        $(".player-0-panel").toggleClass("winner");
+        $(".player-1-panel").toggleClass("winner");
+        $("#name-0").html("Player 1");
+        $("#name-1").html("Player 2");
+
+
+    // reset round scores
+})
    
+
+
