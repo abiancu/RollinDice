@@ -10,7 +10,7 @@ GAME RULES:
 */
 
 // CREATING VARIABLES FOR SCORE
-var score, roundScore, activePlayer, dice;
+var score, roundScore, activePlayer, dice, gamePlaying;
 
 StartGame();
 
@@ -29,6 +29,7 @@ function StartGame() {
     // Setting initial values to 0 for player 1
     $("#score-0").html(0);
     $("#current-0").html(0);
+    gamePlaying = true;
 
 
     // Setting initial values to 0 for player 2
@@ -55,50 +56,59 @@ function NextPlayer(){
 
 //seeting up the event handler for rolling the dice
 $(".btn-roll").click(event => {
-    // 1.CREATING RANDOM NUMBERS TO ROLL THE DICE 
-    var dice = Math.floor(Math.random() * 6) + 1;
-    console.log(dice);
-    
-    // 2.displaying the dice again after cliking 
-    var diceDOM = $(".dice");
-    diceDOM.css({display: "block"});
- 
-    // 3.displaying the correnct number 
-       diceDOM.attr("src", "dice-" + dice + ".png");
+   if(gamePlaying){
+        // 1.CREATING RANDOM NUMBERS TO ROLL THE DICE 
+        var dice = Math.floor(Math.random() * 6) + 1;
+        console.log(dice);
 
-    // 4.update the score if the roll !=1
-    if(dice !== 1){
-        // add the score
-        roundScore += dice;
-        $("#current-" + activePlayer).text(roundScore);
-    } else {        
-        NextPlayer(); // calling next player
-        //hidding the dice againg
-        $(".dice").css({
-            display: "none"
+        // 2.displaying the dice again after cliking 
+        var diceDOM = $(".dice");
+        diceDOM.css({
+            display: "block"
         });
-    }
+
+        // 3.displaying the correnct number 
+        diceDOM.attr("src", "dice-" + dice + ".png");
+
+        // 4.update the score if the roll !=1
+        if (dice !== 1) {
+            // add the score
+            roundScore += dice;
+            $("#current-" + activePlayer).text(roundScore);
+        } else {
+            NextPlayer(); // calling next player
+            //hidding the dice againg
+            $(".dice").css({
+                display: "none"
+            });
+        }
+   }
 }); 
 
 // event listener for the Hold btn
 $(".btn-hold").click(event => {
-    //1. Add current score to global socor
-    score[activePlayer] += roundScore;
-    
-    // 2. Update the UI
-    $("#score-" + activePlayer).html(score[activePlayer]);   
-     // calling next player
+   if(gamePlaying){
+        //1. Add current score to global socor
+        score[activePlayer] += roundScore;
 
-    // 3. Check if the player won the game
-    if(score[activePlayer] >= 20){
-        $("#name-" + activePlayer).html("winner!");
-        var diceDOM = $(".dice");
-        diceDOM.css({display: "none"}); // hidding the dice
-        $(".player-" + activePlayer + "-panel").toggleClass("winner");
-        $(".player-" + activePlayer + "-panel").removeClass("active");
-    } else { 
-        NextPlayer();
-    }
+        // 2. Update the UI
+        $("#score-" + activePlayer).html(score[activePlayer]);
+        // calling next player
+
+        // 3. Check if the player won the game
+        if (score[activePlayer] >= 20) {
+            $("#name-" + activePlayer).html("winner!");
+            var diceDOM = $(".dice");
+            diceDOM.css({
+                display: "none"
+            }); // hidding the dice
+            $(".player-" + activePlayer + "-panel").toggleClass("winner");
+            $(".player-" + activePlayer + "-panel").removeClass("active");
+            gamePlaying = false;
+        } else {
+            NextPlayer();
+        }
+   }
 
 });
 
@@ -108,13 +118,15 @@ $(".btn-new").click(event => {
     // reset the scores to 0
         StartGame();
     // reset active player to 0
-        $(".player-0-panel").toggleClass("active");
-        $(".player-1-panel").toggleClass("active");
-        $(".player-0-panel").toggleClass("winner");
-        $(".player-1-panel").toggleClass("winner");
-        $("#name-0").html("Player 1");
+       $(".player-0-panel").toggleClass("active");
+       $(".player-1-panel").removeClass("active");
+
+        $(".player-0-panel").removeClass("winner");
+        $(".player-1-panel").removeClass("winner");
+       $("#name-0").html("Player 1");
         $("#name-1").html("Player 2");
 
+       
 
     // reset round scores
 })
