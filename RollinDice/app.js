@@ -96,7 +96,7 @@ $(".btn-hold").click(event => {
         // calling next player
 
         // 3. Check if the player won the game
-        if (score[activePlayer] >= 20) {
+        if (score[activePlayer] >= 100) {
             $("#name-" + activePlayer).html("winner!");
             var diceDOM = $(".dice");
             diceDOM.css({
