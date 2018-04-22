@@ -18,7 +18,7 @@ StartGame();
 $("#current-" + activePlayer).html(dice);
 
 // hidding the dice for the beginnig round
-$(".dice").css({display: "none"});
+// $(".dice").css({display: "none"});
 
 // Start / NewGame 
 function StartGame() {
@@ -58,28 +58,35 @@ function NextPlayer(){
 $(".btn-roll").click(event => {
    if(gamePlaying){
         // 1.CREATING RANDOM NUMBERS TO ROLL THE DICE 
-        var dice = Math.floor(Math.random() * 6) + 1;
-        console.log(dice);
+        var dice1 = Math.floor(Math.random() * 6) + 1;
+        console.log(dice1);
+
+        var dice2 = Math.floor(Math.random() * 6) + 1;
+        console.log(dice2);
 
         // 2.displaying the dice again after cliking 
-        var diceDOM = $(".dice");
+        var diceDOM = $("#dice-1");
+        var diceDOM2 = $("#dice-2");
+        
         diceDOM.css({
             display: "block"
-        });
+        });         
 
         // 3.displaying the correnct number 
-        diceDOM.attr("src", "dice-" + dice + ".png");
+        diceDOM.attr("src", "dice-" + dice1 + ".png");
+        diceDOM2.attr("src", "dice-" + dice2 + ".png");
+        
 
         // 4.update the score if the roll !=1
-        if (dice !== 1) {
+        if (dice1 !== 1) {
             // add the score
-            roundScore += dice;
+            roundScore += dice1;
             $("#current-" + activePlayer).text(roundScore);
         } else {
             NextPlayer(); // calling next player
             //hidding the dice againg
             $(".dice").css({
-                display: "none"
+                display: "block"
             });
         }
    }
