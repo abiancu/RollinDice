@@ -10,15 +10,15 @@ GAME RULES:
 */
 
 // CREATING VARIABLES FOR SCORE
-var score, roundScore, activePlayer, dice, gamePlaying;
+var score, roundScore, activePlayer, dice1, dice2, gamePlaying, hiddeDice;
 
 StartGame();
 
 // SETTING THE VALUE FOR THE CURRENT PLAYER
-$("#current-" + activePlayer).html(dice);
+$("#current-" + activePlayer).html(0);
 
 // hidding the dice for the beginnig round
-// $(".dice").css({display: "none"});
+hideDice = $(".dice").css({display: "none"});
 
 // Start / NewGame 
 function StartGame() {
@@ -28,19 +28,21 @@ function StartGame() {
     activePlayer = 0;
     // Setting initial values to 0 for player 1
     $("#score-0").html(0);
-    $("#current-0").html(0);
-    gamePlaying = true;
+    $("#current-0").html(0); 
 
 
     // Setting initial values to 0 for player 2
     $("#score-1").html(0);
     $("#current-1").html(0);
+
+    gamePlaying = true;
 }
 
 // Next player function
 function NextPlayer(){
     // chaning to next player
     activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    
     //setting round score back to 0
     roundScore = 0;
 
@@ -58,10 +60,11 @@ function NextPlayer(){
 $(".btn-roll").click(event => {
    if(gamePlaying){
         // 1.CREATING RANDOM NUMBERS TO ROLL THE DICE 
-        var dice1 = Math.floor(Math.random() * 6) + 1;
+        dice1 = Math.floor(Math.random() * 6) + 1;
         console.log(dice1);
 
-        var dice2 = Math.floor(Math.random() * 6) + 1;
+        // Adding second dice
+        dice2 = Math.floor(Math.random() * 6) + 1;
         console.log(dice2);
 
         // 2.displaying the dice again after cliking 
@@ -70,31 +73,39 @@ $(".btn-roll").click(event => {
         
         diceDOM.css({
             display: "block"
-        });         
+        }); 
+        diceDOM2.css({display: "block"}); 
 
         // 3.displaying the correnct number 
         diceDOM.attr("src", "dice-" + dice1 + ".png");
-        diceDOM2.attr("src", "dice-" + dice2 + ".png");
+        diceDOM2.attr("src", "dice-" + dice2 + ".png"); // to display the second dice roll to the DOM
         
 
         // 4.update the score if the roll !=1
-        if (dice1 !== 1) {
+        if (dice1 !== dice2 ) {
             // add the score
-            roundScore += dice1;
+            roundScore += dice1 + dice2;
             $("#current-" + activePlayer).text(roundScore);
-        } else {
+        }else if(dice1 === 6 && dice2 === 6){
+            score[activePlayer] = 0;
+            $("#score-" + activePlayer).html(score[activePlayer]);
+            NextPlayer();
+        }
+        else{
             NextPlayer(); // calling next player
             //hidding the dice againg
             $(".dice").css({
                 display: "block"
             });
         }
-   }
+        
+    }
 }); 
 
 // event listener for the Hold btn
 $(".btn-hold").click(event => {
    if(gamePlaying){
+        
         //1. Add current score to global socor
         score[activePlayer] += roundScore;
 
@@ -102,8 +113,18 @@ $(".btn-hold").click(event => {
         $("#score-" + activePlayer).html(score[activePlayer]);
         // calling next player
 
+        // reading input score
+        var finalScore = $(".final-score").val();
+        var winningScore;
+
+        if(finalScore){
+            winningScore = finalScore;
+        }else{
+            winningScore = 100;
+        }
+
         // 3. Check if the player won the game
-        if (score[activePlayer] >= 100) {
+        if (score[activePlayer] >= winningScore) {
             $("#name-" + activePlayer).html("winner!");
             var diceDOM = $(".dice");
             diceDOM.css({
@@ -136,7 +157,7 @@ $(".btn-new").click(event => {
        
 
     // reset round scores
-})
+});
    
 
 
